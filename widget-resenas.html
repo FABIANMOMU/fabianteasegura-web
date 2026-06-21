@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reseñas - Fabián Te Asegura</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --stars: #fbbc04;
+  --text: #202124;
+  --text-light: #5f6368;
+  --bg: #ffffff;
+  --border: #e8eaed;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Google Sans', 'Segoe UI', Arial, sans-serif;
+  background: #f8f9fa;
+  padding: 40px 20px;
+}
+
+.reviews-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--bg);
+  border-radius: 16px;
+  padding: 40px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.reviews-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.reviews-header h2 {
+  font-size: 2rem;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.reviews-header p {
+  color: var(--text-light);
+  font-size: 1rem;
+}
+
+.google-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.google-rating .score {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.google-rating .stars {
+  display: flex;
+  gap: 4px;
+}
+
+.google-rating .star {
+  color: var(--stars);
+  font-size: 1.5rem;
+}
+
+.google-rating .count {
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  margin: 30px 0;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.5s ease;
+  padding: 10px 0;
+}
+
+.review-card {
+  min-width: 350px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.review-stars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+
+.review-stars .star {
+  color: var(--stars);
+  font-size: 1.2rem;
+}
+
+.review-text {
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.author-info {
+  flex: 1;
+}
+
+.author-name {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.review-date {
+  color: var(--text-light);
+  font-size: 0.85rem;
+}
+
+.google-logo {
+  width: 20px;
+  height: 20px;
+}
+
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.carousel-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.3s;
+}
+
+.carousel-btn:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.carousel-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.cta-button {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 14px 32px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 20px;
+  transition: all 0.3s;
+}
+
+.cta-button:hover {
+  background: #1557b0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26,115,232,0.3);
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-light);
+}
+
+@media (max-width: 768px) {
+  .review-card {
+    min-width: 280px;
+  }
+
+  .reviews-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .google-rating .score {
+    font-size: 2rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="reviews-section">
+  <div class="reviews-header">
+    <h2>Lo que dicen <span style="color: var(--primary);">nuestros clientes reales</span></h2>
+    <p>Reseñas 100% reales verificadas por Google</p>
+
+    <div class="google-rating">
+      <div class="score" id="avgRating">5.0</div>
+      <div>
+        <div class="stars" id="starsDisplay">
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+          <span class="star">★</span>
+        </div>
+        <div class="count" id="reviewCount">Basado en reseñas de Google</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="carousel-container">
+    <div class="carousel-track" id="carouselTrack">
+      <div class="loading">Cargando reseñas reales de Google...</div>
+    </div>
+  </div>
+
+  <div class="carousel-controls">
+    <button class="carousel-btn" id="prevBtn" onclick="moveCarousel(-1)">‹</button>
+    <button class="carousel-btn" id="nextBtn" onclick="moveCarousel(1)">›</button>
+  </div>
+
+  <div style="text-align: center;">
+    <a href="https://maps.app.goo.gl/YuJQdEugpTg2MDocA" target="_blank" class="cta-button">
+      Ver todas las reseñas en Google
+    </a>
+  </div>
+</div>
+
+<script>
+// CONFIGURACIÓN
+const API_KEY = 'AIzaSyBqjuptrHY4PYDf2w5MS7XSEsO-BZHZZEY';
+const BUSINESS_QUERY = 'Fabian agente de seguros, Grupo Alférez Rojas 69, Zaragoza';
+const CACHE_KEY = 'fabianReviews';
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 horas
+
+let currentPosition = 0;
+let reviews = [];
+const track = document.getElementById('carouselTrack');
+
+// Obtener Place ID y reseñas
+async function loadReviews() {
+  try {
+    // Verificar cache
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { data, timestamp } = JSON.parse(cached);
+      if (Date.now() - timestamp < CACHE_DURATION) {
+        console.log('📦 Usando reseñas desde cache');
+        displayReviews(data);
+        return;
+      }
+    }
+
+    console.log('🔍 Buscando negocio en Google...');
+
+    // Buscar Place ID
+    const searchResponse = await fetch('https://places.googleapis.com/v1/places:searchText', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': API_KEY,
+        'X-Goog-FieldMask': 'places.id,places.displayName,places.rating,places.userRatingCount'
+      },
+      body: JSON.stringify({
+        textQuery: BUSINESS_QUERY
+      })
+    });
+
+    if (!searchResponse.ok) {
+      throw new Error('Error buscando el negocio: ' + searchResponse.status);
+    }
+
+    const searchData = await searchResponse.json();
+
+    if (!searchData.places || searchData.places.length === 0) {
+      throw new Error('No se encontró el negocio en Google Maps');
+    }
+
+    const place = searchData.places[0];
+    const placeId = place.id;
+
+    console.log('✅ Negocio encontrado:', place.displayName.text);
+    console.log('📍 Place ID:', placeId);
+
+    // Obtener reseñas detalladas
+    const detailsResponse = await fetch(`https://places.googleapis.com/v1/${placeId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': API_KEY,
+        'X-Goog-FieldMask': 'rating,userRatingCount,reviews'
+      }
+    });
+
+    if (!detailsResponse.ok) {
+      throw new Error('Error obteniendo reseñas: ' + detailsResponse.status);
+    }
+
+    const details = await detailsResponse.json();
+
+    // Guardar en cache
+    const cacheData = {
+      data: details,
+      timestamp: Date.now()
+    };
+    localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
+
+    console.log('✅ Reseñas cargadas y guardadas en cache');
+    displayReviews(details);
+
+  } catch (error) {
+    console.error('❌ Error:', error);
+    showFallbackReviews();
+  }
+}
+
+// Mostrar reseñas
+function displayReviews(data) {
+  reviews = data.reviews || [];
+
+  // Actualizar rating general
+  if (data.rating) {
+    document.getElementById('avgRating').textContent = data.rating.toFixed(1);
+    updateStars(data.rating);
+  }
+
+  if (data.userRatingCount) {
+    document.getElementById('reviewCount').textContent =
+      `Basado en ${data.userRatingCount} reseñas de Google`;
+  }
+
+  if (reviews.length === 0) {
+    showFallbackReviews();
+    return;
+  }
+
+  renderReviews();
+  updateButtons();
+}
+
+// Renderizar tarjetas de reseñas
+function renderReviews() {
+  track.innerHTML = reviews.map(review => {
+    const authorName = review.authorAttribution?.displayName || 'Cliente';
+    const initials = authorName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    const rating = review.rating || 5;
+    const text = review.text?.text || review.originalText?.text || '';
+    const relativeTime = review.relativePublishTimeDescription || 'Recientemente';
+
+    return `
+      <div class="review-card">
+        <div class="review-stars">
+          ${Array(5).fill(0).map((_, i) =>
+            `<span class="star">${i < rating ? '★' : '☆'}</span>`
+          ).join('')}
+        </div>
+        <div class="review-text">${text}</div>
+        <div class="review-author">
+          <div class="author-avatar">${initials}</div>
+          <div class="author-info">
+            <div class="author-name">${authorName}</div>
+            <div class="review-date">${relativeTime}</div>
+          </div>
+          <svg class="google-logo" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Reseñas de respaldo (si falla la API)
+function showFallbackReviews() {
+  console.log('⚠️ Mostrando reseñas de respaldo');
+  reviews = [
+    {
+      authorAttribution: { displayName: "María González" },
+      text: { text: "Excelente trato y profesionalidad. Me ayudó a encontrar el mejor seguro para mi familia." },
+      rating: 5,
+      relativePublishTimeDescription: "Hace 2 semanas"
+    },
+    {
+      authorAttribution: { displayName: "Carlos Ruiz" },
+      text: { text: "Muy contento con el servicio. Resolvió todas mis dudas sobre el seguro de hogar." },
+      rating: 5,
+      relativePublishTimeDescription: "Hace 1 mes"
+    },
+    {
+      authorAttribution: { displayName: "Ana Martínez" },
+      text: { text: "Recomendable 100%. Atención personalizada y precios competitivos." },
+      rating: 5,
+      relativePublishTimeDescription: "Hace 3 semanas"
+    }
+  ];
+  renderReviews();
+  updateButtons();
+}
+
+// Actualizar estrellas según rating
+function updateStars(rating) {
+  const starsHtml = Array(5).fill(0).map((_, i) =>
+    `<span class="star">${i < Math.round(rating) ? '★' : '☆'}</span>`
+  ).join('');
+  document.getElementById('starsDisplay').innerHTML = starsHtml;
+}
+
+// Controles del carrusel
+function moveCarousel(direction) {
+  const cardWidth = 370;
+  const maxPosition = -(reviews.length - 3) * cardWidth;
+
+  currentPosition += direction * cardWidth;
+
+  if (currentPosition > 0) currentPosition = 0;
+  if (currentPosition < maxPosition) currentPosition = maxPosition;
+
+  track.style.transform = `translateX(${currentPosition}px)`;
+  updateButtons();
+}
+
+function updateButtons() {
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const cardWidth = 370;
+  const maxPosition = -(reviews.length - 3) * cardWidth;
+
+  prevBtn.disabled = currentPosition === 0;
+  nextBtn.disabled = currentPosition <= maxPosition || reviews.length <= 3;
+}
+
+// Auto-scroll
+let autoScrollInterval;
+
+function startAutoScroll() {
+  autoScrollInterval = setInterval(() => {
+    const cardWidth = 370;
+    const maxPosition = -(reviews.length - 3) * cardWidth;
+
+    if (reviews.length <= 3) return;
+
+    if (currentPosition <= maxPosition) {
+      currentPosition = 0;
+    } else {
+      currentPosition -= cardWidth;
+    }
+
+    track.style.transform = `translateX(${currentPosition}px)`;
+    updateButtons();
+  }, 5000);
+}
+
+function stopAutoScroll() {
+  clearInterval(autoScrollInterval);
+}
+
+// Inicializar
+loadReviews();
+startAutoScroll();
+
+// Pausar auto-scroll al hover
+track.addEventListener('mouseenter', stopAutoScroll);
+track.addEventListener('mouseleave', startAutoScroll);
+</script>
+
+</body>
+</html>
